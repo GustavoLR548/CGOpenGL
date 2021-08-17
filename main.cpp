@@ -1,37 +1,47 @@
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <iostream>
+#include <unistd.h>
 
 int main(void)
 {
     GLFWwindow* window;
-
-    /* Initialize the library */
-    if (!glfwInit())
+    
+    if(!glfwInit()) 
         return -1;
+    
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (!window)
-    {
+    window = glfwCreateWindow(800, 800, "Test", NULL, NULL);
+    if(window == NULL) {
+
+        std::cout << "Failed to create GLFW Window" << std::endl;
         glfwTerminate();
         return -1;
     }
 
-    /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
-    {
-        /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+    gladLoadGL();
+    glViewport(0,0,800,800);
+    glClearColor(0.07f,0.13f,0.17f,1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glfwSwapBuffers(window);
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+    while(!glfwWindowShouldClose(window)) {
 
-        /* Poll for and process events */
+        double x,y;
         glfwPollEvents();
+        glfwGetCursorPos(window,&x,&y);
+        if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
+            std::cout<< x << " ; " << y << std::endl;
+            sleep(1);
+        }
     }
 
+    glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
 }
