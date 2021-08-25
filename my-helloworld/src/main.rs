@@ -1,42 +1,67 @@
 extern crate sdl2;
 
-use sdl2::pixels::Color;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
+use std::collections::HashSet;
 use std::time::Duration;
+use sdl2::pixels::Color;
 
-pub fn main() {
-    let sdl_context = sdl2::init().unwrap();
-    let video_subsystem = sdl_context.video().unwrap();
+pub fn main() -> Result<(), String> {
+    let sdl_context = sdl2::init()?;
+    let video_subsystem = sdl_context.video()?;
 
-    let window = video_subsystem.window("Trabalho Prático 1", 1280, 720)
+    let _window = video_subsystem
+        .window("Trabalho Pratico", 1280, 720)
         .position_centered()
         .build()
-        .unwrap();
+        .map_err(|e| e.to_string())?;
 
-    let mut canvas = window.into_canvas().build().unwrap();
+    let mut events = sdl_context.event_pump()?;
 
-    canvas.set_draw_color(Color::RGB(0, 255, 255));
-    canvas.clear();
-    canvas.present();
-    let mut event_pump = sdl_context.event_pump().unwrap();
-    let mut i = 0;
+    let mut prev_buttons = HashSet::new();
+
+    let mut canvas = _window.into_canvas().build().unwrap();
+
     'running: loop {
-        i = (i + 1) % 255;
-        canvas.set_draw_color(Color::RGB(i, 64, 255 - i));
+
+        canvas.set_draw_color(Color::RGB(0, 64, 255));
         canvas.clear();
-        for event in event_pump.poll_iter() {
+
+        for event in events.poll_iter() {
             match event {
-                Event::Quit {..} |
-                Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
-                    break 'running
-                },
+                Event::KeyDown {
+                    keycode: Some(Keycode::Escape),
+                    ..
+                }
+                | Event::Quit { .. } => break 'running,
                 _ => {}
             }
         }
-        // The rest of the game loop goes here...
 
+        // get a mouse state
+        let state = events.mouse_state();
+
+        // Create a set of pressed Keys.
+        let buttons = state.pressed_mouse_buttons().collect();
+
+        // Get the difference between the new and old sets.
+        let new_buttons = &buttons - &prev_buttons;
+        let old_buttons = &prev_buttons - &buttons;
+
+        if !new_buttons.is_empty() || !old_buttons.is_empty() {
+            println!(
+                "X = {:?}, Y = {:?} : {:?} -> {:?}",
+                state.x(),
+                state.y(),
+                new_buttons,
+                old_buttons
+            );
+        }
+
+        prev_buttons = buttons;
         canvas.present();
-        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
+        std::thread::sleep(Duration::from_millis(100));
     }
+
+    Ok(())
 }
