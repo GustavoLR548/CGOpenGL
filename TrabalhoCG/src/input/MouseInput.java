@@ -1,6 +1,10 @@
 package input;
 
-//Classe para gerenciar input do mouse
+/**
+ * Classe para gerenciar inputs do mouse do usuario
+ * @author gustavolr
+ *
+ */
 public class MouseInput {
 
 	// Coordenadas

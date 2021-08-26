@@ -10,28 +10,34 @@ import input.MouseInput;
 import algorithms.drawline.DrawLine;
 
 
-
+/**
+ * Main responsavel em iniciar o programa, alem de iniciar
+ * configuracoes da janela e controles.
+ * @author gustavolr
+ *
+ */
 public class Main extends Canvas implements Runnable,MouseListener {
+	
 	 //Adicionando um "serial number" ao canvas
 		private static final long serialVersionUID = 1L;
 
 		//Declarando atributos da minha classe
 		
-		private JFrame frame; 							// Janela do meu jogo
+		private JFrame frame; 							
 		
-		private static boolean isRunning; 				// Variavel para manter o jogo ligado
+		private static boolean isRunning; 				// Variavel para manter o programa ligado
 		
-		private final static int WIDTH = 240; 			// Comprimento da janela a ser criada
+		private final static int WIDTH  = 240; 			// Comprimento da janela a ser criada
 		private final static int HEIGHT = 160; 			// Altura da janela a ser criada
-		public final static int SCALE = 4; 			    // x vezes que a janela sera aumentada
+		public final static int  SCALE  = 4; 			    // x vezes que a janela sera aumentada
 		private static Thread thread;					// Criando threads
 		
-		public static BufferedImage layer; 					// Imagem de fundo do meu jogo
+		public static BufferedImage layer; 					
 		
-		//Construtor do meu jogo
+	
 		public Main(){
 			
-			// Configurando as dimensoes da minha tela
+			// Configurando as dimensoes da tela
 			
 			// Em janela
 			this.setPreferredSize(new Dimension(WIDTH*SCALE,HEIGHT*SCALE));
@@ -116,6 +122,7 @@ public class Main extends Canvas implements Runnable,MouseListener {
 			//Parar o programa
 			try {
 				stop();
+				
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
