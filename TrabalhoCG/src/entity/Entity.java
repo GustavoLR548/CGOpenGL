@@ -4,11 +4,11 @@ import java.awt.Graphics;
 
 public class Entity {
 
-	private int x;
-	private int y;
+	protected int x;
+	protected int y;
 	
-	private int width;
-	private int height;
+	protected int width;
+	protected int height;
 	
 	public Entity(int width, int height) {
 		this.width  = width;

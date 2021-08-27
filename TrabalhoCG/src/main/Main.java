@@ -7,8 +7,6 @@ import java.awt.image.*;
 import javax.swing.JFrame;
 
 import input.MouseInput;
-import algorithms.drawline.DrawLine;
-
 
 /**
  * Main responsavel em iniciar o programa, alem de iniciar
@@ -32,6 +30,8 @@ public class Main extends Canvas implements Runnable,MouseListener {
 		public final static int  SCALE  = 4; 			    // x vezes que a janela sera aumentada
 		private static Thread thread;					// Criando threads
 		
+		private SceneHandler scene_handler = new SceneHandler();
+		
 		public static BufferedImage layer; 					
 		
 	
@@ -49,6 +49,18 @@ public class Main extends Canvas implements Runnable,MouseListener {
 			// com que inputs do teclado seja possivel
 			this.addMouseListener(this);
 			
+		}
+		
+		public static int get_width() {
+			return WIDTH;
+		}
+		
+		public static int get_height() {
+			return HEIGHT;
+		}
+		
+		public static int get_scale() {
+			return SCALE;
 		}
 		
 		//Metodo para iniciar a janela
@@ -128,7 +140,7 @@ public class Main extends Canvas implements Runnable,MouseListener {
 			}
 		}
 		
-		//Funcao que ira acontecer no fim do game
+		//Funcao que sera executada no fim do programa
 		public void stop() throws InterruptedException {
 			
 			isRunning = false;
@@ -138,10 +150,7 @@ public class Main extends Canvas implements Runnable,MouseListener {
 		//Funcao que chama as acoes de todas as coisas a cada frame
 		public void tick() {
 			
-			
-			if(MouseInput.is_right_button_pressed()) {
-				System.out.println(MouseInput.get_x() + "|" + MouseInput.get_y());
-			}
+			scene_handler.tick();
 			
 		}
 		
@@ -161,14 +170,7 @@ public class Main extends Canvas implements Runnable,MouseListener {
 			g.dispose();
 			g = bs.getDrawGraphics();
 			
-			// Renderizar fundo da tela
-			g.setColor(Color.blue);
-			g.fillRect(0, 0, WIDTH*SCALE, HEIGHT*SCALE);
-			
-			if(MouseInput.is_right_button_pressed()) {
-				g.setColor(Color.red);
-				DrawLine.DDA(g, 0, 0, MouseInput.get_x() * SCALE, MouseInput.get_y() * SCALE);
-			}
+			scene_handler.render(g);
 			
 			//Mostrar tudo que foi pedido para ser renderizado
 			
@@ -179,7 +181,14 @@ public class Main extends Canvas implements Runnable,MouseListener {
 
 		@Override
 		public void mouseClicked(MouseEvent m) {
-			// TODO Auto-generated method stub
+			
+			//Verificar se o botao direito do mouse foi pressionado
+			if(m.getButton() == MouseEvent.BUTTON1) {
+				MouseInput.set_right_button_press(true);
+				MouseInput.set_x(m.getX()-6);
+				MouseInput.set_y(m.getY()-6);
+			}
+			
 			
 		}
 
@@ -197,15 +206,12 @@ public class Main extends Canvas implements Runnable,MouseListener {
 
 		@Override
 		public void mousePressed(MouseEvent m) {
-			
-			MouseInput.set_right_button_press(true);
-			MouseInput.set_x(m.getX()/ SCALE);
-			MouseInput.set_y(m.getY()/ SCALE);
+
 			
 		}
 
 		@Override
-		public void mouseReleased(MouseEvent arg0) {
+		public void mouseReleased(MouseEvent m) {
 			
 			
 		}

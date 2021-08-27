@@ -12,13 +12,16 @@ public class Scene {
 	
 	private SceneState curr_state;
 	private byte render_priority;
+	private String name;
 
-	public Scene() {
+	public Scene(String name) {
+		this.name            = name;
 		this.curr_state      = SceneState.Stopped;
 		this.render_priority = 0;
 	}
 	
-	public Scene(byte render_priority) {
+	public Scene(String name, byte render_priority) {
+		this.name            = name;
 		this.curr_state      = SceneState.Stopped;
 		this.render_priority = render_priority;
 	}
@@ -35,12 +38,20 @@ public class Scene {
 		return this.render_priority;
 	}
 	
+	public String get_scene_name() {
+		return this.name;
+	}
+	
 	public void set_curr_state(SceneState curr_state) {
 		this.curr_state = curr_state;
 	}
 	
 	public void set_render_priority(byte render_priority) {
 		this.render_priority = render_priority;
+	}
+	
+	public void set_scene_name(String name) {
+		this.name = name;
 	}
 	
 	public static Comparator<Scene> sceneSorter = new Comparator<Scene>() {

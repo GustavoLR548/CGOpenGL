@@ -4,16 +4,22 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import scene.Scene;
-import scene.SceneState;
+import scene.*;
 
+/**
+ * Classe para gerenciar todas as cenas no programa, quais ele deve
+ * rodar para pegar input, e qual ele deve rodar para reproduzir na tela
+ * @author gustavolr
+ *
+ */
 public class SceneHandler {
 
 	private static ArrayList<Scene> all_scenes;
 	private static Scene curr_running_scene;
 	
 	public SceneHandler() {
-		curr_running_scene = null;
+		CanvasScene main_scene = new CanvasScene("Canvas", (byte)0);
+		curr_running_scene = main_scene;
 		all_scenes = new ArrayList<Scene>();
 	}
 	
@@ -48,6 +54,7 @@ public class SceneHandler {
 				sc.render(g);
 			
 		}
+		
 	}
 	
 }
