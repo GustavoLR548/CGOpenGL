@@ -26,7 +26,10 @@ public class MouseInput {
 	}
 	
 	public static boolean is_right_button_pressed() {
-		return right_mouse_button;
+		boolean value = right_mouse_button;
+		if(right_mouse_button) 
+			right_mouse_button = false;
+		return value;
 	}
 
 	public static boolean is_left_button_pressed() {

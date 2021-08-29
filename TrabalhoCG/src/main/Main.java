@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
 
 import input.MouseInput;
 
@@ -21,7 +23,7 @@ public class Main extends Canvas implements Runnable,MouseListener {
 
 		//Declarando atributos da minha classe
 		
-		private JFrame frame; 							
+		private JFrame frame; 			
 		
 		private static boolean isRunning; 				// Variavel para manter o programa ligado
 		
@@ -63,9 +65,10 @@ public class Main extends Canvas implements Runnable,MouseListener {
 			return SCALE;
 		}
 		
+		
 		//Metodo para iniciar a janela
 		private void initFrame() {
-			
+
 			// Configurando janela
 			this.frame = new JFrame("Trabalho Pratico CG"); 
 			frame.setResizable(false); 
