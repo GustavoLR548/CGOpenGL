@@ -3,24 +3,30 @@ package scene;
 import java.awt.Graphics;
 import java.util.Comparator;
 
+import entity.Entity;
+
 /**
  * Classe template para as cenas do programa
  * @author gustavolr
  *
  */
-public class Scene {
+public class Scene extends Entity{
 	
 	private SceneState curr_state;
 	private byte render_priority;
 	private String name;
-
-	public Scene(String name) {
+	
+	public Scene(int width, int height, String name) {
+		super(width,height);
+		
 		this.name            = name;
 		this.curr_state      = SceneState.Stopped;
 		this.render_priority = 0;
 	}
 	
-	public Scene(String name, byte render_priority) {
+	public Scene(int x, int y,int width, int height,String name, byte render_priority) {
+		super(x, y, width, height);
+		
 		this.name            = name;
 		this.curr_state      = SceneState.Stopped;
 		this.render_priority = render_priority;

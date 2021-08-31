@@ -4,9 +4,8 @@ package main;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
+
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
 
 import input.MouseInput;
 
@@ -16,23 +15,25 @@ import input.MouseInput;
  * @author gustavolr
  *
  */
-public class Main extends Canvas implements Runnable,MouseListener {
+public class Main extends Canvas implements Runnable,MouseListener,MouseMotionListener {
 	
-	 //Adicionando um "serial number" ao canvas
+		// Serial number do canvas
 		private static final long serialVersionUID = 1L;
 
-		//Declarando atributos da minha classe
+		private JFrame frame; 
 		
-		private JFrame frame; 			
+		// Variavel para manter o programa ligado
+		private boolean isRunning; 				        
 		
-		private static boolean isRunning; 				// Variavel para manter o programa ligado
+		// Dimensoes da tela do programa
+		private final static int WIDTH  = 320; 			// Comprimento da janela a ser criada
+		private final static int HEIGHT = 240; 			// Altura da janela a ser criada
+		public final static int  SCALE  = 4; 			// x vezes que a janela sera aumentada
 		
-		private final static int WIDTH  = 240; 			// Comprimento da janela a ser criada
-		private final static int HEIGHT = 160; 			// Altura da janela a ser criada
-		public final static int  SCALE  = 4; 			    // x vezes que a janela sera aumentada
-		private static Thread thread;					// Criando threads
+		// Criando thread
+		private static Thread thread;					
 		
-		private SceneHandler scene_handler = new SceneHandler();
+		private SceneHandler scene_handler;
 		
 		public static BufferedImage layer; 					
 		
@@ -47,9 +48,12 @@ public class Main extends Canvas implements Runnable,MouseListener {
 			// Configurando as preferencias da minha janela
 			initFrame();
 			
+			this.scene_handler = new SceneHandler();
+			
 			// Adicionar um Listener a esta classe, permitindo
 			// com que inputs do teclado seja possivel
 			this.addMouseListener(this);
+			this.addMouseMotionListener(this);
 			
 		}
 		
@@ -75,7 +79,6 @@ public class Main extends Canvas implements Runnable,MouseListener {
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 			frame.add(this);
 			frame.pack();
-	
 			
 			frame.setLocationRelativeTo(null);
 			frame.setVisible(true);
@@ -188,8 +191,6 @@ public class Main extends Canvas implements Runnable,MouseListener {
 			//Verificar se o botao direito do mouse foi pressionado
 			if(m.getButton() == MouseEvent.BUTTON1) {
 				MouseInput.set_right_button_press(true);
-				MouseInput.set_x(m.getX()-6);
-				MouseInput.set_y(m.getY()-6);
 			}
 			
 			
@@ -216,6 +217,18 @@ public class Main extends Canvas implements Runnable,MouseListener {
 		@Override
 		public void mouseReleased(MouseEvent m) {
 			
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent m) {
+			MouseInput.set_x(m.getX()-6);
+			MouseInput.set_y(m.getY()-6);
 			
 		}
 }

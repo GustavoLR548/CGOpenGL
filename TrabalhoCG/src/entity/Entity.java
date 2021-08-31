@@ -1,7 +1,16 @@
 package entity;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 
+/**
+ * Classe generica para armazenar objetos genericos
+ * dentro do canvas
+ * @author gustavolr
+ *
+ */
 public class Entity {
 
 	protected int x;
@@ -39,11 +48,28 @@ public class Entity {
 		return this.height;
 	}
 	
+	public boolean isColidding(Entity e1) {
+		
+		Rectangle e1Mask = new Rectangle(e1.x , e1.y ,e1.width,e1.height);
+		Rectangle e2Mask = new Rectangle(this.x , this.y ,this.width, this.height);
+		
+		boolean isIntersecting = e1Mask.intersects(e2Mask);
+		
+		return isIntersecting;
+	}
+	
 	public void tick() {
 		
 	}
 	
 	public void render(Graphics g) {
+
+	}
+	
+	public void render_mask(Graphics g) {
 		
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setColor(new Color(200,0,0,100));
+		g2.fillRect(this.x, this.y, this.width, this.height);
 	}
 }

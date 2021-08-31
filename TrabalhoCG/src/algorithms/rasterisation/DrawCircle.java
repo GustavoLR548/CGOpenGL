@@ -1,4 +1,4 @@
-package algorithms.drawfigure;
+package algorithms.rasterisation;
 
 import java.awt.Graphics;
 
@@ -9,14 +9,14 @@ public class DrawCircle {
 	// Function to put pixels
 	// at subsequence points
 	private static void draw_circle(Graphics g, int xc, int yc, int x, int y) {
-		g.fillRect(xc+x, yc+y, brush_size, brush_size);
-		g.fillRect(xc-x, yc+y, brush_size, brush_size);
-		g.fillRect(xc+x, yc-y, brush_size, brush_size);
-		g.fillRect(xc-x, yc-y, brush_size, brush_size);
-		g.fillRect(xc+y, yc+x, brush_size, brush_size);
-		g.fillRect(xc-y, yc+x, brush_size, brush_size);
-		g.fillRect(xc+y, yc-x, brush_size, brush_size);
-		g.fillRect(xc-y, yc-x, brush_size, brush_size);
+		g.fillOval(xc+x, yc+y, brush_size, brush_size);
+		g.fillOval(xc-x, yc+y, brush_size, brush_size);
+		g.fillOval(xc+x, yc-y, brush_size, brush_size);
+		g.fillOval(xc-x, yc-y, brush_size, brush_size);
+		g.fillOval(xc+y, yc+x, brush_size, brush_size);
+		g.fillOval(xc-y, yc+x, brush_size, brush_size);
+		g.fillOval(xc+y, yc-x, brush_size, brush_size);
+		g.fillOval(xc-y, yc-x, brush_size, brush_size);
 	}
 	 
 	// Function for circle-generation

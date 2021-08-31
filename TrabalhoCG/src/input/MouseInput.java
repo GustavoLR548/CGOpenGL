@@ -1,5 +1,7 @@
 package input;
 
+import entity.Entity;
+
 /**
  * Classe para gerenciar inputs do mouse do usuario
  * @author gustavolr
@@ -23,6 +25,10 @@ public class MouseInput {
 	
 	public static int get_y() {
 		return y;
+	}
+	
+	public static Entity get_mouse_entity() {
+		return new Entity(x,y,10,10);
 	}
 	
 	public static boolean is_right_button_pressed() {

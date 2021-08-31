@@ -5,6 +5,11 @@ import java.awt.Graphics;
 
 import entity.Entity;
 
+/**
+ * Classe para armazenar pontos no canvas
+ * @author gustavolr
+ *
+ */
 public class Vertex extends Entity{
 
 	public Vertex(int x, int y, int width, int height) {
