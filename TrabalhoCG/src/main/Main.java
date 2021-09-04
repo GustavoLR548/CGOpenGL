@@ -190,7 +190,7 @@ public class Main extends Canvas implements Runnable,MouseListener,MouseMotionLi
 			
 			//Verificar se o botao direito do mouse foi pressionado
 			if(m.getButton() == MouseEvent.BUTTON1) {
-				MouseInput.set_right_button_press(true);
+				MouseInput.set_right_button_clicked(true);
 			}
 			
 			
@@ -210,19 +210,22 @@ public class Main extends Canvas implements Runnable,MouseListener,MouseMotionLi
 
 		@Override
 		public void mousePressed(MouseEvent m) {
-
-			
+			if(m.getButton() == MouseEvent.BUTTON1) {
+				MouseInput.set_right_button_pressed(true);
+			}
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent m) {
 			
+			if(m.getButton() == MouseEvent.BUTTON1) {
+				MouseInput.set_right_button_pressed(false);
+			}
 		}
 
 		@Override
-		public void mouseDragged(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
+		public void mouseDragged(MouseEvent m) {
+
 		}
 
 		@Override

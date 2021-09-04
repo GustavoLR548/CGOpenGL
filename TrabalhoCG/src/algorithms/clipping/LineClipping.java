@@ -1,25 +1,52 @@
 package algorithms.clipping;
 
+import java.awt.Graphics;
+
+import entity.geometry.Line;
+import entity.geometry.Vertex;
+
+/**
+ * Algoritmos para processos de LineClipping
+ * @author gustavolr
+ *
+ */
 public class LineClipping {
 	
-	// Defining region codes
-	private final int INSIDE = 0; // 0000
-	private final int LEFT = 1; // 0001
-	private final int RIGHT = 2; // 0010
-	private final int BOTTOM = 4; // 0100
-	private final int TOP = 8; // 1000
+	// Codigo das regioes para operacoes
+	// de bitwise (and)
+	
+	private static final int INSIDE = 0; // 0000
+	private static final int LEFT   = 1; // 0001
+	private static final int RIGHT  = 2; // 0010
+	private static final int BOTTOM = 4; // 0100
+	private static final int TOP    = 8; // 1000
+
+	// Variaveis para definir a área de clipping
+	private static int x_max = -1;
+	private static int y_max = -1;
+	private static int x_min = -1;
+	private static int y_min = -1;
+	
+	// Quando qualquer variável for igual a '-1'
+	public static boolean rectangleExist() {
+		return x_max != -1;
+	}
+	
+	// Resetar o clipping atual
+	public static void resetClippingRectangle() {
+		x_max = x_min = y_max = y_min = -1;
+	}
+	
+	// Definiir nova area de clipping
+	public static void defineClippingRectangle(int new_x_min, int new_x_max, int new_y_min, int new_y_max) {
+		x_max = new_x_max;
+		x_min = new_x_min;
+		y_max = new_y_max;
+		y_min = new_y_min;
+	}
 	  
-	// Defining x_max, y_max and x_min, y_min for
-	// clipping rectangle. Since diagonal points are
-	// enough to define a rectangle
-	private final int x_max = 10;
-	private final int y_max = 8;
-	private final int x_min = 4;
-	private final int y_min = 4;
-	  
-	// Function to compute region code for a point(x, y)
-	int computeCode(double x, double y)
-	{
+	// Encontrar a região em que o ponto se encontra
+	private static int computeCode(double x, double y) {
 	    // initialized as being inside
 	    int code = INSIDE;
 	  
@@ -34,70 +61,82 @@ public class LineClipping {
 	  
 	    return code;
 	}
-	  
 	
-	// Implementing Cohen-Sutherland algorithm
-	// Clipping a line from P1 = (x2, y2) to P2 = (x2, y2)
-	public void cohenSutherlandClip(double x1, double y1, double x2, double y2) {
+	/**
+	 * Algoritmo de cohenSutherland clipping
+	 * @param g é o renderizador de gráficos
+	 * @param l é a linha que será clippada
+	 * @return a nova linha clipada a partir do algoritmo
+	 */
+	public static Line cohenSutherlandClip(Graphics g, Line l) {
 		
-	    // Compute region codes for P1, P2
+		// Se o clipping não existir, retornar a linha original
+		if(!LineClipping.rectangleExist()) 
+			return l;
+		
+		// Resgatar os valores da linha
+		double x1 = l.get_v1().get_x();
+		double x2 = l.get_v2().get_x();
+		
+		double y1 = l.get_v1().get_y();
+		double y2 = l.get_v2().get_y();
+		
+	    // Achar as regioes que os pontos dessa linha
+		// se encontram dentro do retangulo
 	    int code1 = computeCode(x1, y1);
 	    int code2 = computeCode(x2, y2);
 	  
-	    // Initialize line as outside the rectangular window
+	    // Inicializar como falso
 	    boolean accept = false;
 	  
 	    while (true) {
+	    	
 	        if ((code1 == 0) && (code2 == 0)) {
-	            // If both endpoints lie within rectangle
+	            // Ambos os pontos estão dentro da area
 	            accept = true;
 	            break;
 	        }
-	        else if ((code1 & code2) > 0) {
-	            // If both endpoints are outside rectangle,
-	            // in same region
+	        else if ((code1 & code2) != 0) {
+	            // Ambos os pontos estão fora da area
 	            break;
 	        }
 	        else {
-	            // Some segment of line lies within the
-	            // rectangle
+	            // Algum segmento da linha está dentro da
+	        	// area
 	            int code_out;
 	            double x = 0, y = 0;
 	  
-	            // At least one endpoint is outside the
-	            // rectangle, pick it.
+	            // Um dos pontos está fora da linha
 	            if (code1 != 0)
 	                code_out = code1;
 	            else
 	                code_out = code2;
 	  
-	            // Find intersection point;
-	            // using formulas y = y1 + slope * (x - x1),
-	            // x = x1 + (1 / slope) * (y - y1)
-	            if ((code_out & TOP) > 0) {
-	                // point is above the clip rectangle
+	            // Achar pontos de interseção
+	            if ((code_out & TOP) != 0) {
+
 	                x = x1 + (x2 - x1) * (y_max - y1) / (y2 - y1);
 	                y = y_max;
 	            }
-	            else if ((code_out & BOTTOM) > 0) {
-	                // point is below the rectangle
+	            else if ((code_out & BOTTOM) != 0) {
+
 	                x = x1 + (x2 - x1) * (y_min - y1) / (y2 - y1);
 	                y = y_min;
 	            }
-	            else if ((code_out & RIGHT) > 0) {
-	                // point is to the right of rectangle
+	            else if ((code_out & RIGHT) != 0) {
+
 	                y = y1 + (y2 - y1) * (x_max - x1) / (x2 - x1);
 	                x = x_max;
 	            }
-	            else if ((code_out & LEFT) > 0) {
-	                // point is to the left of rectangle
+	            else if ((code_out & LEFT) != 0) {
+
 	                y = y1 + (y2 - y1) * (x_min - x1) / (x2 - x1);
 	                x = x_min;
 	            }
 	  
-	            // Now intersection point x, y is found
-	            // We replace point outside rectangle
-	            // by intersection point
+	            // Pontos encontrados, agora é substituir
+	            // a interseção com os pontos anteriores
+	            
 	            if (code_out == code1) {
 	                x1 = x;
 	                y1 = y;
@@ -110,17 +149,17 @@ public class LineClipping {
 	            }
 	        }
 	    }
-	    if (accept) {
-	    	System.out.println("Line accepted from " + x1 + ", " + y1 + " to " + x2 + ", " + y2  );
-	        // Here the user can add code to display the rectangle
-	        // along with the accepted (portion of) lines
-	    }
+	    if (accept) 
+	    	return new Line(new Vertex((int)x1, (int)y1), new Vertex((int)x2,(int)y2), l.get_line_type());
 	    else
-	    	System.out.println("Line rejected");
+	    	return null;
+	
+	    
 	}
 	
-/*
-	public boolean clipTest (float p,float q, float t1, float t2){
+	private static float t1,t2;
+
+	public static boolean clipTest (float p,float q){
 		float r;
 		boolean retVal = true;
 		  
@@ -133,67 +172,78 @@ public class LineClipping {
 		    if ( r > t2 )                         
 		    retVal = false;
 		      
-		    else
-			    if (r > t1 )
+		    else if (r > t1 )
 			    	t1 = r; 
 		}
 		  
-		else
-		  
-		//line leaving point
-		if (p>0.0) {                             
-		    r = q/p ;
-		      
-		    // line portion is outside     
-		    if ( r < t1 )                         
-		        retVal = true;    
-		          
-		    else 
-		    	if (r < t2)
-		        t2 = r;
-		}
+		else 
+			//line leaving point
+			if (p>0.0) {                             
+			    r = q/p ;
+			      
+			    // line portion is outside     
+			    if ( r < t1 )                         
+			        retVal = false;    
+			          
+			    else if (r < t2)
+			        t2 = r;
+			}
 		  
 		// p = 0, so line is parallel to this clipping edge 
 		else    
-		  
 		// Line is outside clipping edge 
-		if (q<0.0)                                 
-		retVal = false;
-		  
+			if (q<0.0)                                 
+				retVal = false;
+			  
 		return retVal;
 	}
-	  
-	void clipLine (dcPt winMin, dcPt winMax, wcPt2 pl , wcPt2 p2) { 
-		float t1 = 0, t2 = 1, dx = p2.x-p1.x, dy;
+
+	public static Line liangBarskyClipping(Graphics g, Line l) { 
+	
+		if(!LineClipping.rectangleExist()) {
+			return l;
+		}
+		
+		int x1 = l.get_v1().get_x();
+		int x2 = l.get_v2().get_x();
+		
+		int y1 = l.get_v1().get_y();
+		int y2 = l.get_v2().get_y();
+	
+		float dx = x2-x1, dy;
+		t1 = 0;
+		t2 = 1;
 		
 		 // inside test wrt left edge
-		if(clipTest (-dx, p1.x - winMin.x, &t1, &t2))    
+		if(clipTest (-dx, x1 - x_min))    
 			
 			 // inside test wrt right edge 
-			if(clipTest (dx, winMax.x - p1.x, &t1, &t2)) {                
-			    dy = p2.y - p1.y;
+			if(clipTest (dx, x_max - x1)) {                
+			    dy = y2 - y1;
 			      
 			    // inside test wrt bottom edge 
-			    if(clipTest (-dy, p1.y - winMin.y, &t1, &t2))
+			    if(clipTest (-dy, y1 - y_min))
 			      
 			        // inside test wrt top edge 
-			        if(clipTest (dy, winMax.y - p1.y, &t1, &t2)) {
+			        if(clipTest (dy, y_max - y1)) {
 			              
 				        if(t2 < 1.0) {
-				            p2.x = p1.x + t2*dx;
-				            p2.y = p1.y + t2*dy;
+				            x2 = (int)(x1 + t2*dx);
+				            y2 = (int)(y1 + t2*dy);
 				        }
 				          
 				        if(t1 > 0.0) {
-				            p1.x += t1*dx;
-				            p1.y += t1*dy;
+				            x1 += t1*dx;
+				            y1 += t1*dy;
 				        }
 				          
-				        lineDDA ( ROUND(p1.x), ROUND(p1.y), ROUND(p2.x), ROUND(p2.y) );
+				        return new Line(new Vertex((int)x1,(int)y1), new Vertex((int)x2,(int)y2), l.get_line_type());
 			          
 			        }
 			}
+		
+		
+		return null;
 		  
-		} 
-		*/
+	} 
 }

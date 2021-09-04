@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import scene.*;
+import scene.canvas.CanvasScene;
 
 /**
  * Classe para gerenciar todas as cenas no programa, quais ele deve

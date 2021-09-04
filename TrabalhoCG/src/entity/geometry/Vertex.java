@@ -12,13 +12,12 @@ import entity.Entity;
  */
 public class Vertex extends Entity{
 
-	public Vertex(int x, int y, int width, int height) {
-		super(x,y,width, height);
-		// TODO Auto-generated constructor stub
+	public Vertex(int x,int y) {
+		super(x,y,10,10);
 	}
 	
-	public void tick() {
-		
+	public Vertex(int x, int y, int width, int height) {
+		super(x,y,width, height);
 	}
 	
 	public void render(Graphics g) {

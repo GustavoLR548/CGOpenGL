@@ -14,8 +14,10 @@ public class MouseInput {
 	private static int y;
 	
 	// Possíveis botoes do mouse
-	private static boolean right_mouse_button;
-	private static boolean left_mouse_button;
+	private static boolean right_button_clicked;
+	private static boolean left_button_clicked;
+	private static boolean right_button_pressed;
+	private static boolean left_button_pressed;
 	
 	// getters
 	
@@ -32,16 +34,23 @@ public class MouseInput {
 	}
 	
 	public static boolean is_right_button_pressed() {
-		boolean value = right_mouse_button;
-		if(right_mouse_button) 
-			right_mouse_button = false;
-		return value;
+		return right_button_pressed;
 	}
 
 	public static boolean is_left_button_pressed() {
-		return left_mouse_button;
+		return left_button_pressed;
 	}
 	
+	public static boolean is_right_button_clicked() {
+		boolean value = right_button_clicked;
+		if(right_button_clicked) 
+			right_button_clicked = false;
+		return value;
+	}
+
+	public static boolean is_left_button_clicked() {
+		return left_button_clicked;
+	}
 	//setters
 	
 	public static void set_x(int new_x) {
@@ -52,12 +61,19 @@ public class MouseInput {
 		y = new_y;
 	}
 
-	public static void set_right_button_press(boolean new_value) {
-		right_mouse_button = new_value;
+	public static void set_right_button_clicked(boolean new_value) {
+		right_button_clicked = new_value;
 	}
 	
-	public static void set_left_button_press(boolean new_value) {
-		left_mouse_button = new_value;
+	public static void set_left_button_clicked(boolean new_value) {
+		left_button_clicked = new_value;
 	}
-
+	
+	public static void set_right_button_pressed(boolean new_value) {
+		right_button_pressed = new_value;
+	}
+	
+	public static void set_left_button_pressed(boolean new_value) {
+		left_button_pressed = new_value;
+	}
 }

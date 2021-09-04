@@ -48,14 +48,14 @@ public class DrawLine {
 		y = y1;
 		
 		// Criar o primero ponto
-		g.fillRect((int)Math.round(x), (int)Math.round(y), brush_size, brush_size);
+		g.fillOval((int)Math.round(x), (int)Math.round(y), brush_size, brush_size);
 		
 		// Criar a reta
 		for(int i = 1; i < steps; i++) {
 			x += x_i;
 			y += y_i;
 			
-			g.fillRect((int)Math.round(x), (int)Math.round(y), brush_size, brush_size);
+			g.fillOval((int)Math.round(x), (int)Math.round(y), brush_size, brush_size);
 		}
 		
 	}
