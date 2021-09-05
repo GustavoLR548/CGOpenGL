@@ -18,15 +18,22 @@ import input.MouseInput;
 import main.Main;
 import scene.Scene;
 
+/**
+ * Principal cena para a geração do programa
+ * @author gustavolr
+ *
+ */
 public class CanvasScene extends Scene{
 	
+	// Conteudo a ser gerado na tela
 	private ArrayList<Vertex> vertexes;
 	private ArrayList<Entity> entities;
-	
 	private Entity selected_entity;
 	
+	// Retangulo de clipping
 	private Rectangle clippingRectangle;
 	
+	// Cena com os botões
 	private CanvasController canvas_controller;
 
 	public CanvasScene(String name) {
@@ -57,9 +64,47 @@ public class CanvasScene extends Scene{
 			draw_operation();
 		}
 		
+		if(this.selected_entity != null) {
+			
+			selected_entity_operations();
+		}
+		
+		if(this.canvas_controller.get_action() == CanvasAction.Clear_screen) {
+			this.vertexes.clear();
+			this.entities.clear();
+			this.canvas_controller.reset_previous_action();
+		}
+		
 		reset_operation();
 	}
 	
+	/**
+	 * Operações para serem feitas com a entidade selecionada
+	 */
+	public void selected_entity_operations() {
+		if(!this.selected_entity.isColidding(MouseInput.get_mouse_entity()) && MouseInput.is_right_button_clicked()) {
+		
+			
+			//this.selected_entity.translation(MouseInput.get_x(), MouseInput.get_y());
+			//this.selected_entity.translation(MouseInput.get_x(), MouseInput.get_y());
+			
+			this.selected_entity.scaling(
+					(float)MouseInput.get_x() /this.selected_entity.get_x(),
+					(float)MouseInput.get_y() /this.selected_entity.get_y());
+			
+			//double dx = MouseInput.get_x() - this.selected_entity.get_x();
+			//double dy = MouseInput.get_y() - this.selected_entity.get_y();
+			/*
+			this.selected_entity.rotation((int)Math.atan2(dy, dx));
+			*/
+			
+		}
+	}
+	
+	/**
+	 * Todas as operações que envolve cliques do mouse e alguma operação que foi
+	 * selecionadas no controlador
+	 */
 	public void draw_operation() {
 		
 		if((canvas_controller.get_action() == CanvasAction.Draw_line_dda || 
@@ -71,8 +116,8 @@ public class CanvasScene extends Scene{
 			if(vertexes.size() == 2) {
 				
 				entities.add(new Line(vertexes.get(0),
-										vertexes.get(1), 
-										LineType.convertCanvasAction(canvas_controller.get_action())));
+									  vertexes.get(1), 
+									  LineType.convertCanvasAction(canvas_controller.get_action())));
 				vertexes.clear();
 			}
 			
@@ -82,17 +127,18 @@ public class CanvasScene extends Scene{
 			
 		} else if(canvas_controller.get_action() == CanvasAction.Selection) {
 			for(Entity e : this.entities) {	
-				if(e.isColidding(MouseInput.get_mouse_entity()) && MouseInput.is_right_button_pressed()) 
+				if(e.isColidding(MouseInput.get_mouse_entity()) && MouseInput.is_right_button_clicked()) {
+					
+					if(this.selected_entity != null) {
+						this.selected_entity.set_color(Color.blue);
+					}
+					
 					this.selected_entity = e;
+					this.selected_entity.set_color(Color.red);
+				}
 				
 			}
-
-			
-			if(MouseInput.is_right_button_pressed()) {
-				this.selected_entity.translation();
-			}
-			
-			
+						
 		} else if((canvas_controller.get_action() == CanvasAction.Clipping_cohen || canvas_controller.get_action() == CanvasAction.Clipping_liang)&&
 				  MouseInput.is_right_button_clicked()) {
 			
@@ -101,6 +147,9 @@ public class CanvasScene extends Scene{
 		}
 	}
 	
+	/**
+	 * Resetar canvas, em relação a ultima operação selecionada
+	 */
 	public void reset_operation() {
 		
 		if(this.canvas_controller.get_previous_action() == CanvasAction.Clipping_cohen ||
@@ -110,8 +159,22 @@ public class CanvasScene extends Scene{
 			LineClipping.resetClippingRectangle();
 			this.canvas_controller.reset_previous_action();
 		}
+		
+		if(this.canvas_controller.get_previous_action() == CanvasAction.Selection) {
+			
+			if(this.selected_entity != null ) {
+				this.selected_entity.set_color(Color.blue);
+				this.selected_entity = null;
+			}
+		}
 	}
 	
+	/**
+	 * Escolher qual algoritmo de clipping será usado
+	 * @param g é o renderizador gráfico
+	 * @param l é a linha ser clipada
+	 * @return a linha clipada usando o algoritmo selecionado
+	 */
 	public Line clipLine(Graphics g, Line l) {
 		if(this.canvas_controller.get_action() == CanvasAction.Clipping_cohen) 
 			return LineClipping.cohenSutherlandClip(g, l);
@@ -122,10 +185,9 @@ public class CanvasScene extends Scene{
 	public void render(Graphics g) {
 		
 		// Renderizar fundo da tela
-		g.setColor(Color.blue);
+		g.setColor(Color.white);
 		g.fillRect(this.x, this.y, this.width, this.height);
 		
-		g.setColor(Color.red);
 		for(Entity e: entities) {
 		
 			if(e instanceof Line) {
@@ -147,10 +209,11 @@ public class CanvasScene extends Scene{
 
 		this.canvas_controller.render(g);
 		
+		// Renderizar o retângulo de clipping
 		g.setColor(Color.red);
 		if(this.clippingRectangle != null) {
 			Graphics2D g2 = (Graphics2D) g;
-			float thickness = 5;
+			float thickness = 18;
 			Stroke oldStroke = g2.getStroke();
 			g2.setStroke(new BasicStroke(thickness));
 			g2.drawRect(

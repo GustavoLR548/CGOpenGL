@@ -189,11 +189,11 @@ public class LineClipping {
 			        t2 = r;
 			}
 		  
-		// p = 0, so line is parallel to this clipping edge 
-		else    
-		// Line is outside clipping edge 
-			if (q<0.0)                                 
-				retVal = false;
+			// p = 0, so line is parallel to this clipping edge 
+			else    
+			// Line is outside clipping edge 
+				if (q<0.0)                                 
+					retVal = false;
 			  
 		return retVal;
 	}
@@ -215,34 +215,26 @@ public class LineClipping {
 		t2 = 1;
 		
 		 // inside test wrt left edge
-		if(clipTest (-dx, x1 - x_min))    
-			
-			 // inside test wrt right edge 
-			if(clipTest (dx, x_max - x1)) {                
-			    dy = y2 - y1;
-			      
-			    // inside test wrt bottom edge 
-			    if(clipTest (-dy, y1 - y_min))
-			      
-			        // inside test wrt top edge 
-			        if(clipTest (dy, y_max - y1)) {
-			              
-				        if(t2 < 1.0) {
-				            x2 = (int)(x1 + t2*dx);
-				            y2 = (int)(y1 + t2*dy);
-				        }
-				          
-				        if(t1 > 0.0) {
-				            x1 += t1*dx;
-				            y1 += t1*dy;
-				        }
-				          
-				        return new Line(new Vertex((int)x1,(int)y1), new Vertex((int)x2,(int)y2), l.get_line_type());
-			          
-			        }
-			}
-		
-		
+		if(clipTest (-dx, x1 - x_min) && clipTest (dx, x_max - x1) ) {
+			dy = y2 - y1;
+		    // inside test wrt bottom edge 
+		    if(clipTest (-dy, y1 - y_min) && clipTest (dy, y_max - y1)) {
+		              
+		        if(t2 < 1.0) {
+		            x2 = (int)(x1 + t2*dx);
+		            y2 = (int)(y1 + t2*dy);
+		        }
+		          
+		        if(t1 > 0.0) {
+		            x1 += t1*dx;
+		            y1 += t1*dy;
+		        }
+
+		        return new Line(new Vertex((int)x1,(int)y1), new Vertex((int)x2,(int)y2), l.get_line_type());
+	          
+		    }
+		}
+
 		return null;
 		  
 	} 

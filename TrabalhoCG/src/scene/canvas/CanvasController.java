@@ -8,12 +8,21 @@ import entity.ui.Button;
 import input.MouseInput;
 import scene.Scene;
 
+/**
+ * Classe para gerenciar a parte superior do canvas, responsável em armazenar os botões
+ * que o programa precisa para gerenciar entre as diferentes ações
+ * @author gustavolr
+ */
 public class CanvasController extends Scene {
 	
+	// Botões do canvas e botão atualmente selecionado
 	ArrayList<Button> canvas_buttons;
 	Button curr_pressed_button;
+	
+	// Cor do controlado do canvas
 	Color canvas_color;
 	
+	// Controlar as ações selecionadas
 	CanvasAction curr_action;
 	CanvasAction previous_action;
 	
@@ -34,6 +43,7 @@ public class CanvasController extends Scene {
 		this.canvas_buttons.add(new Button("Desenhar Círculo",550, 30, 200, 40, CanvasAction.Draw_circle));
 		this.canvas_buttons.add(new Button("Cohen Clipping",760, 30, 200, 40, CanvasAction.Clipping_cohen));
 		this.canvas_buttons.add(new Button("Liang Clipping",760, 80, 200, 40, CanvasAction.Clipping_liang));
+		this.canvas_buttons.add(new Button("Limpar tela",50, 80, 145, 40, CanvasAction.Clear_screen));
 	}
 	
 	public CanvasAction get_action() {
@@ -42,6 +52,10 @@ public class CanvasController extends Scene {
 	
 	public CanvasAction get_previous_action() {
 		return this.previous_action;
+	}
+	
+	public void reset_curr_action() {
+		this.curr_action = CanvasAction.Nothing;
 	}
 	
 	public void reset_previous_action() {

@@ -12,16 +12,24 @@ import entity.Entity;
 import input.MouseInput;
 import scene.canvas.CanvasAction;
 
+/**
+ * Classe de um botão genérico para ser usado na interface
+ * @author gustavolr
+ *
+ */
 public class Button extends Entity {
 	
+	// Variavel para criar um intervalo entre cada apertar do botão
 	private final int button_interval = 60;
 	
 	boolean is_pressed;
 	
+	// Guardar ação a ser executada quando apertar
 	CanvasAction pressed_action;
 	
+	// Guardar metricas da fonte para centralização do texto
 	FontMetrics metrics;
-	
+
 	Color button_color;
 	Color selected;
 	Color not_selected;
@@ -32,6 +40,7 @@ public class Button extends Entity {
 	
 	Font labelFont;
 	
+	// Guardar que ponto do intervalo o botão está
 	int button_interval_frame = 0;
 
 	public Button(String label, int x,int y,int width, int height, CanvasAction pressed_action) {
@@ -39,7 +48,7 @@ public class Button extends Entity {
 		
 		this.pressed_action = pressed_action;
 		
-		is_pressed = false;
+		this.is_pressed = false;
 		
 		this.selected     = new Color(155,155,155);
 		this.not_selected = new Color(233,233,233);
@@ -77,6 +86,9 @@ public class Button extends Entity {
 	
 	public void tick() {
 		
+		/**
+		 * Gerenciamento da checagem de apertar o botão
+		 */
 		if(button_interval_frame == 0) {
 			if(isColidding(MouseInput.get_mouse_entity())) {
 				if(MouseInput.is_right_button_clicked()) {	
@@ -100,9 +112,11 @@ public class Button extends Entity {
 	
 	public void render(Graphics g) {
 		
+		// Desenhar fundo
 		g.setColor(button_color);
 		g.fillRect(x, y, width, height);
 		
+		// Desenhar borda do botão
 		g.setColor(border_color);
 		Graphics2D g2 = (Graphics2D) g;
 		float thickness = 5;
@@ -111,15 +125,13 @@ public class Button extends Entity {
 		g2.drawRect(x, y, width, height);
 		g2.setStroke(oldStroke);
 		
+		// Desenhar o texto do botão, centralizando 
+		// seu texto dentro do retangulo gerado anteriormente
 		g.setColor(border_color);
 		g.setFont(labelFont);
-		
 		metrics = g.getFontMetrics(labelFont);
-		
 		int x = this.x + (this.width - metrics.stringWidth(label)) / 2;
-		
 	    int y = this.y + ((this.height - metrics.getHeight()) / 2) + metrics.getAscent();
-		
 		g.drawString(this.label, x, y+7 );
 	}
 	

@@ -15,9 +15,7 @@ public class MouseInput {
 	
 	// Possíveis botoes do mouse
 	private static boolean right_button_clicked;
-	private static boolean left_button_clicked;
 	private static boolean right_button_pressed;
-	private static boolean left_button_pressed;
 	
 	// getters
 	
@@ -29,16 +27,17 @@ public class MouseInput {
 		return y;
 	}
 	
+	/**
+	 * Gerar uma entidade do mouse, para fazer uma checagem
+	 * de colisão
+	 * @return
+	 */
 	public static Entity get_mouse_entity() {
 		return new Entity(x,y,10,10);
 	}
 	
 	public static boolean is_right_button_pressed() {
 		return right_button_pressed;
-	}
-
-	public static boolean is_left_button_pressed() {
-		return left_button_pressed;
 	}
 	
 	public static boolean is_right_button_clicked() {
@@ -48,9 +47,6 @@ public class MouseInput {
 		return value;
 	}
 
-	public static boolean is_left_button_clicked() {
-		return left_button_clicked;
-	}
 	//setters
 	
 	public static void set_x(int new_x) {
@@ -65,15 +61,8 @@ public class MouseInput {
 		right_button_clicked = new_value;
 	}
 	
-	public static void set_left_button_clicked(boolean new_value) {
-		left_button_clicked = new_value;
-	}
-	
 	public static void set_right_button_pressed(boolean new_value) {
 		right_button_pressed = new_value;
 	}
-	
-	public static void set_left_button_pressed(boolean new_value) {
-		left_button_pressed = new_value;
-	}
+
 }

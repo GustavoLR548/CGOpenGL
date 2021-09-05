@@ -1,5 +1,10 @@
 package scene.canvas;
 
+/**
+ * Enum para gerenciar as possíveis ações no canvas
+ * @author gustavolr
+ *
+ */
 public enum CanvasAction {
 	
 	Nothing(-1),
@@ -8,7 +13,8 @@ public enum CanvasAction {
 	Draw_line_bresenham(2),
 	Draw_circle(3),
 	Clipping_cohen(4),
-	Clipping_liang(5);
+	Clear_screen(5),
+	Clipping_liang(6);
 	
 	private int action_code;
 	
